@@ -1,7 +1,7 @@
 # HoleFilling
 
 * image  
-![](/sample/image.png)
+![](/sample/hole.png)
 
 
 * result  
