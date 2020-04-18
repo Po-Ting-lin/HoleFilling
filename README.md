@@ -24,4 +24,4 @@ time consuming: 1.5 s
 ![](/sample/result.png)  
 time consuming: 0.2 s  
 
-
+In this image, Speed Border Image Initial Algorithm is approximately 7 times faster than Border Image Initial Algorithm. 
