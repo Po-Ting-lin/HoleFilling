@@ -5,8 +5,11 @@
 
 class HoleFilling
 {
+private:
+	cv::Mat BorderImageInit(cv::Mat& src);
+	cv::Mat SpeedBorderImageInit(cv::Mat& src);
 public:
-    void process(cv::Mat& src, cv::Mat& dst);
+	void process(cv::Mat& src, cv::Mat& dst);
 };
 
 static void displayImage(const cv::Mat& image, const char* name, bool mag) {

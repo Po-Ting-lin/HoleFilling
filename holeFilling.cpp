@@ -1,19 +1,31 @@
 #include "holeFilling.h"
 
 
-void HoleFilling::process(cv::Mat& src, cv::Mat& dst) {
-    cv::Mat image, preMarker, cImage, curImage, nextImage;
+cv::Mat HoleFilling::BorderImageInit(cv::Mat& src) {
+    cv::Mat dst(src.rows, src.cols, CV_8U, cv::Scalar(0));
     int imageSize = src.rows * src.cols;
+    uchar* dstPtr = dst.data;
+    uchar* srcPtr = src.data;
+    int r, c;
 
-    cvtColor(src, src, cv::COLOR_BGR2GRAY);
+    for (int p = 0; p < imageSize; p++, dstPtr++, srcPtr++) {
+        // is Border?
+        r = p / src.cols;
+        c = p % src.cols;
+        if (r == 0 || r == src.rows - 1 || c == 0 || c == src.cols - 1) {
+            *dstPtr = CV_8U_DYNAMICRANGE - 1 - *srcPtr;
+        }
+        else {
+            *dstPtr = 0;
+        }
+    }
+    return dst;
+}
 
-    cv::threshold(src, image, 125, CV_8U_DYNAMICRANGE - 1, 0);
-    //copyMakeBorder(src, image, 1, 1, 1, 1, CV_8U, 0);
-    cv::bitwise_not(image, cImage);
-
-    // init marker
-    image.copyTo(preMarker);
-    uchar* preMarkerPtr = preMarker.data;
+cv::Mat HoleFilling::SpeedBorderImageInit(cv::Mat& src) {
+    cv::Mat dst; src.copyTo(dst);
+    int imageSize = src.rows * src.cols;
+    uchar* preMarkerPtr = dst.data;
     bool* visitedArr = new bool[imageSize] {};
     bool* curvisited = visitedArr;
 
@@ -29,7 +41,7 @@ void HoleFilling::process(cv::Mat& src, cv::Mat& dst) {
                 curvisited++;
             }
             else {
-                preMarkerPtr = preMarker.data + r * src.cols;
+                preMarkerPtr = dst.data + r * src.cols;
                 curvisited = visitedArr + r * src.cols;
                 break;
             }
@@ -38,7 +50,7 @@ void HoleFilling::process(cv::Mat& src, cv::Mat& dst) {
 
     // right to left
     for (int r = 0; r < src.rows; r++) {
-        preMarkerPtr = preMarker.data + (r + 1) * src.cols - 1;
+        preMarkerPtr = dst.data + (r + 1) * src.cols - 1;
         curvisited = visitedArr + (r + 1) * src.cols - 1;
         for (int c = 0; c < src.cols; c++) {
 
@@ -54,17 +66,33 @@ void HoleFilling::process(cv::Mat& src, cv::Mat& dst) {
             }
         }
     }
-    preMarkerPtr = preMarker.data;
+    preMarkerPtr = dst.data;
     curvisited = visitedArr;
     for (int r = 0; r < imageSize; r++, preMarkerPtr++, curvisited++) {
         if (!(*curvisited)) {
             *preMarkerPtr = 0;
         }
     }
-
     delete[] visitedArr;
-    visitedArr = nullptr;
+    visitedArr = curvisited = nullptr;
+    preMarkerPtr = nullptr;
+    return dst;
+}
+
+
+void HoleFilling::process(cv::Mat& src, cv::Mat& dst) {
+    cv::Mat image, preMarker, cImage, curImage, nextImage;
+    int imageSize = src.rows * src.cols;
+
+    cvtColor(src, src, cv::COLOR_BGR2GRAY);
+
+    cv::threshold(src, image, 125, CV_8U_DYNAMICRANGE - 1, 0);
+    cv::bitwise_not(image, cImage);
+
+    //preMarker = SpeedBorderImageInit(image);
+    preMarker = BorderImageInit(image);
     preMarker.copyTo(curImage);
+
     uchar* dilationKernel = new uchar[9]{ 0,1,0,1,1,1,0,1,0 };
     cv::Mat element(3, 3, CV_8U, &dilationKernel);
 
