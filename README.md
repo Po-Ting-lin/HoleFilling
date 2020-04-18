@@ -12,12 +12,11 @@ It greatly reduces computational process on sparse images.
 
 ### testing result
 * image  
-time consuming: 1.5 s  
 ![](/sample/hole.png)
-1. Border Image Initial Algorithm
+1. Border Image Initial Algorithm  
+time consuming: 1.5 s  
 
-
-2. Speed Border Image Initial Algorithm
+2. Speed Border Image Initial Algorithm  
 time consuming: 0.2 s  
 * result  
 ![](/sample/result.png)
