@@ -13,7 +13,8 @@ It greatly reduces computational process on sparse images.
 ### testing result
 * image  
 ![](/sample/hole.png)
-1. Border Image Initial Algorithm  
+1. Border Image Initial Algorithm 
+![](/sample/BIIA.png)  
 time consuming: 1.5 s  
 
 2. Speed Border Image Initial Algorithm  
