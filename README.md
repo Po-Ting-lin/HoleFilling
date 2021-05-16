@@ -1,27 +1,24 @@
 # HoleFilling
 
-## Table of Contents
-* Introduction
-* testing result
-
 ### Introduction
-Implementation of [Improving Morphology Operation for 2D Hole Filling Algorithm](http://www.cscjournals.org/library/manuscriptinfo.php?mc=IJIP-493)
-.This paper proposed a faster solution than the original 2D hole filling algorithm by applying a pre-marker mask to initiate the process of hole filling.
-It greatly reduces computational process on sparse images.  
+Implementation of hole filling with Speed Border Image Initial Algorithm[1]. The process is suitible for accelerating by gpu. In the test image(1.3 megapixels), the gain of performance is up to 316 times compared with the CPU Naive method.
 
+### Test   
+![](/sample/letter_image-1.png)
+![](/sample/letter_result-1.png)  
+![](/sample/rbc-1.png)
+![](/sample/rbc_result-1.png)  
 
-### testing result
-* test image  
-![](/sample/hole.png)  
+Method        |Image                 | Avg. Elapsed Time
+--------------|:--------------------:|-------------------
+CPU Naive     |Text (1.3 Megapixels) |  6322 ms
+GPU           |Text (1.3 Megapixels) |  20 ms (~ x316)
+GPU           |RBC  (1.4 Megapixels) |  69 ms
 
-* result  
-1. Border Image Initial Algorithm  
-![](/sample/BIIA.png)  
-time consuming: 1.5 s  
+### Reference
+```
+[1] Hasan, Mokhtar M., and Pramod K. Mishra. 
+    "Improving morphology operation for 2D hole filling algorithm."
+    International Journal of Image Processing (IJIP) 6.1 (2012): 635-646.
+```
 
-
-2. Speed Border Image Initial Algorithm  
-![](/sample/result.png)  
-time consuming: 0.2 s  
-
-In this image, Speed Border Image Initial Algorithm is approximately 7 times faster than Border Image Initial Algorithm. 
